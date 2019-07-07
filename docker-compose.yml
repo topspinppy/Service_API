@@ -25,6 +25,7 @@ services:
       DATABASE_PASSWORD: 1234
       DATABASE_HOST: mongodb
       DATABASE_PORT: 27017
+      SECRET: '1234'
 
 networks:
   servicesnet:

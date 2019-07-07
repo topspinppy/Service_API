@@ -1,5 +1,6 @@
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
+import passport from 'koa-passport'
 import { load } from 'koa-decorator'
 import cors from '@koa/cors'
 import path from 'path'
@@ -8,6 +9,8 @@ import mongoose from 'mongoose'
 const app = new Koa()
 
 app.use(bodyParser())
+app.use(passport.initialize())
+
 app.use(
   cors({
     origin: '*',
@@ -26,7 +29,11 @@ app.use(
   }),
 )
 
-mongoose.connect(`mongodb://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}/services?authSource=admin`)
+mongoose.connect(
+  `mongodb://${process.env.DATABASE_USER}:${process.env.DATABASE_PASSWORD}@${
+    process.env.DATABASE_HOST
+  }:${process.env.DATABASE_PORT}/services?authSource=admin`,
+)
 
 const server = app
   .listen(3333, () => {
