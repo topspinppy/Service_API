@@ -10,9 +10,9 @@ const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromHeader('authorization'),
   secretOrKey: SECRET, //SECRETเดียวกับตอนencodeในกรณีนี้คือ MY_SECRET_KEY
 }
-const jwtAuth = new JwtStrategy(jwtOptions, (payload, done) => {
-  console.log(payload.sub)
-  if (payload.sub === 'admin') done(null, true)
+const jwtAuth = new JwtStrategy(jwtOptions, async (payload, done) => {
+  let data = await user.findOne({ username: payload.sub })
+  if (payload.sub === data.username) done(null, true)
   else done(null, false)
 })
 

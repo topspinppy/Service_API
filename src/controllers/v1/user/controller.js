@@ -1,8 +1,7 @@
 import { HttpMethod, route } from 'koa-decorator'
 import user from '../../../model/user.schema'
-
-import { isAuthenticated } from '../../../middleware/auth'
-import { loginMiddleware } from '../../../middleware/login'
+import { isAuthenticated, loginMiddleware } from '../../../middleware'
+import _ from 'lodash'
 import jwt from 'jwt-simple'
 
 const SECRET = 'MY_SECRET_KEY'
@@ -38,7 +37,7 @@ export default class User {
   @route('/users', HttpMethod.POST, isAuthenticated)
   async createuser(ctx) {
     let requestData = ctx.request.body
-    console.log("requestdata => ", requestData)
+    if (!_.isEmpty(requestData)) {
       let data = await user.findOne({ username: requestData.username })
       if (data) {
         ctx.body = {
@@ -52,8 +51,13 @@ export default class User {
           log: 'Create User Successfully',
         }
       }
+    } else {
+      ctx.body = {
+        status: 500,
+        log: 'No Data',
+      }
+    }
   }
-
   @route('/users/:id', HttpMethod.PUT, isAuthenticated)
   async updateuser(ctx) {
     let idUser = ctx.params.id
